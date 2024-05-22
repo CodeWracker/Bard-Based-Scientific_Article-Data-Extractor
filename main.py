@@ -15,7 +15,7 @@ cookies = json.loads(open(
 
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-TABLE_MODEL_CSV = "Title,Authors,Year,Source,Battery Type,Control Method,Control Location,SoC Estimation Technique,Control Parameters,Energy Efficiency,Differences (Li vs. Pb-Acid),Battery Capacity,System Power,Energy Source,Implementation Challenges,PWM Circuit Notes,DC-DC Converter Used,Additional Notes"
+TABLE_MODEL_CSV = "Title,First Author,Year,Source,Battery Type,Control Method,Control Location,SoC Estimation Technique,Control Parameters,Energy Efficiency,Differences (Li vs. Pb-Acid),Battery Capacity,System Power,Energy Source,Implementation Challenges,PWM Circuit Notes,DC-DC Converter Used,Additional Notes"
 columns = []
 for col in TABLE_MODEL_CSV.split(','):
     columns.append(col.strip())
@@ -36,7 +36,7 @@ TABLE_MODEL_DESCRIPTION = """
 **Descrição das Colunas:**
 
 - **Title**: Título do artigo.
-- **Authors**: Autor(es) do artigo.
+- **First Author**: Nome e sobrenome do autor sem usar virgula.
 - **Year**: Ano de publicação.
 - **Source**: Fonte ou revista onde o artigo foi publicado.
 - **Battery Type**: Tipo de bateria estudada no artigo.
@@ -110,8 +110,6 @@ LEMBRE-SE A SUA RESPOSTA DEVE SER SOMENTE UM CSV!!!!!!! NO FORMATO
 {TABLE_MODEL_CSV}
 {cols_example}
 ```
-
-LEMBRANDO QUE O CONTEUDO DE UMA CELULA DEVE ESTER ENTRE ASPAS DUPLAS " " E SE HOUVER VIRGULA NO CONTEUDO DA CELULA, SUBSTITUA POR PONTO E VIRGULA ; POR EXEMPLO LISTA DE AUTORES: "Autor1; Autor2; Autor3"
         """
 
         print(f"Tentando a query com o texto com {len(pdf_text)} caracteres...")
@@ -183,9 +181,8 @@ def process_query_response(response):
     
     # escreve um csv temporário sem a coluna de index
     with open('temp.csv', 'w', encoding='utf-8') as f:
-        writer = csv.writer(f)
-        writer.writerow(response_header)
-        writer.writerow(response_body)
+        f.write(','.join(response_header) + '\n')
+        f.write(','.join(response_body) + '\n')
 
     # lê o csv temporário
     try:
