@@ -22,8 +22,8 @@ Isso instalará todos os pacotes Python necessários em um ambiente virtual.
 1. **Prepare os Cookies**: Coloque os cookies exportados em `bard_cookies.json` no diretório do projeto.
 2. **Configure Colunas e Descrições**: Modifique `colunas_e_descrição.xlsx` para definir as colunas que deseja extrair dos artigos. A primeira linha de cada coluna deve descrever o que a informação representa. Aqui está um exemplo de configuração (voce pode colocar qualquer coluna e qualquer descrição, mas tente ser claro pois os modelos de LLM são meio burros, vide o fato de que eu tive que gritar em capslock para ele entender o que eu queria em um dos campos):
 
-| Título           | Primeiro Autor                                                 | Ano de Publicação | Fonte                                        | Tipo de Bateria                    | Eficiência                               | Datasets                                                          | Notas Adicionais                                                 |
-| ---------------- | -------------------------------------------------------------- | ----------------- | -------------------------------------------- | ---------------------------------- | ---------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Título| Primeiro Autor| Ano de Publicação | Fonte| Tipo de Bateria| Eficiência| Datasets| Notas Adicionais|
+| ---------------- | ------------- | ----------------- | ------------------- | --------- | --------------- | ---------------- | --------------- |
 | Título do Artigo | SOMENTE O NOME DO PRIMEIRO AUTOR DO ARTIGO!!!!! NOME SÓ APENAS | Ano de Publicação | Fonte ou revista onde o artigo foi publicado | Tipo de bateria estudada no artigo | Eficiência energética do método proposto | Lista dos datasets separados por vírgula citados durante o artigo | Qualquer outra observação ou informação relevante sobre o artigo |
 
 3. **Prepare os PDFs**: Coloque os PDFs a serem analisados na pasta `PDFs`.
