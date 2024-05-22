@@ -1,44 +1,5 @@
-## Article in Markdown Format
+## Extracted information from the scientific article in a CSV format:
 
-**Title:** A Magnetically Coupled Feedback-Clamped Optimal Bidirectional Battery Charger
+**Title,Authors,Year,Source,Battery Type,Control Method,Control Location,SoC Estimation Technique,Control Parameters,Energy Efficiency,Differences (Li vs. Pb-Acid),Battery Capacity,System Power,Energy Source,Implementation Challenges,PWM Circuit Notes,DC-DC Converter Used,Additional Notes**
 
-**Authors:** R. K. Singh, Santanu Mishra
-
-**Year:** 2013
-
-**Source:** IEEE Transactions on Industrial Electronics, Vol. 60, No. 2
-
-**Battery Type:** Lead-Acid (studied in the article, but the charger can handle various types)
-
-**Control Method:** Average current mode control with feedback-clamped technique
-
-**Control Location:** Not specified
-
-**SoC Estimation Technique:** Not explicitly mentioned
-
-**Control Parameters:** Battery voltage (Vbat_boost/Vbat_buck), battery current (Ibat_boost/Ibat_buck), reference voltage (Vref), clamping voltage (Vclamp)
-
-**Energy Efficiency:** Maximum efficiency of 90.24% under boost mode and 92.7% under buck mode (achieved in the prototype)
-
-**Differences (Li vs. Pb-Acid):** The article focuses on lead-acid batteries, but the charger can be used for various types with adjustments. 
-
-**Battery Capacity:** Not specified in the article (the charger can work with various capacities)
-
-**System Power:** Not specified in the article
-
-**Energy Source:** Not specified in the article (the charger can be used with various sources)
-
-**Implementation Challenges:** None mentioned specifically, but the paper focuses on addressing limitations of conventional chargers.
-
-**PWM Circuit Notes:** Not specified
-
-**DC-DC Converter Used:** Magnetically coupled bidirectional converter with damping network
-
-**Additional Notes:**
-
-* The charger can handle batteries with various voltage ratings (universal behavior).
-* The charger adapts to the optimal charging current requirement of a specific battery.
-* The transition between constant current (CC) and constant voltage (CV) modes is smooth and automatic.
-* The feedback loop remains in control throughout all operation modes.
-
-░
+Title,Augmented system model-based online collaborative determination of lead-acid battery states for energy management of vehicles,Yuefei Wang, Fei Huang, Bin Pan, Yang Li and Baijun Liu,2021,Measurement and Control,Lead-Acid Battery,Online Least Square Circuit Parameter Identification (LSCPI) and Adaptive Kalman Filter for Augmented System (AKFAS),Electromagnetic Energy Management System (EMS),Kalman Filter,Voltage, Current,Temperature,Not Mentioned,-,-,Not Mentioned,Not Mentioned,Not Mentioned,Yes,The proposed method utilizes a new state estimating variable b, instantaneous correlation factor, for improved accuracy.░

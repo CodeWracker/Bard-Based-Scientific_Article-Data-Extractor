@@ -24,9 +24,9 @@ print(columns)
 cols_example = ""
 for col in columns:
     if col != columns[-1]:
-        cols_example += f"{col}, "
+        cols_example += f'"Exemplo de preenchimento normal, "'
     else:
-        cols_example += "Exemplo de preenchimento com ponto e virgula; blablabla,"
+        cols_example += '"Exemplo de preenchimento com ponto e virgula; blablabla,"'
 
 # if last char is , remove it
 if cols_example[-1] == ',':
@@ -75,7 +75,7 @@ Extraia e organize as informações do artigo científico seguindo o formato de 
 
 Colunas requeridas:
 
-"Titulo,Universidade do 1º Autor,País da Universidade do 1º Autor,Ano,Hardware Utilizado para Treinamento,Hardware Utilizado para Utilização,Versões da YOLO citadas,Versão da YOLO utilizada,Versão Base da YOLO utilizada,Datasets,Desempenho do modelo utilizado,Motivo da seleção do modelo utilizado,Comentários e Observações"
+"{TABLE_MODEL_CSV}"
 
 
 *Instruções detalhadas:*
@@ -94,11 +94,24 @@ Colunas requeridas:
 {cols_example}
 ```
 
+A explicação de cada coluna é fornecida abaixo para referência:
+{TABLE_MODEL_DESCRIPTION}
+
 Nota: Siga estas instruções com atenção para assegurar a consistência e precisão das informações apresentadas no formato CSV textual.
 
 Artigo:
 {pdf_text}
+
+
+----
+
+LEMBRE-SE A SUA RESPOSTA DEVE SER SOMENTE UM CSV!!!!!!! NO FORMATO
+```csv
+{TABLE_MODEL_CSV}
+{cols_example}
 ```
+
+LEMBRANDO QUE O CONTEUDO DE UMA CELULA DEVE ESTER ENTRE ASPAS DUPLAS " " E SE HOUVER VIRGULA NO CONTEUDO DA CELULA, SUBSTITUA POR PONTO E VIRGULA ; POR EXEMPLO LISTA DE AUTORES: "Autor1; Autor2; Autor3"
         """
 
         print(f"Tentando a query com o texto com {len(pdf_text)} caracteres...")
@@ -149,54 +162,44 @@ def process_query_response(response):
 
     response = response[response.find(columns[0]):]
 
-    # se os 2 primeiros caracteres forem || substitui por |
-    if response[:2] == '||':
-        # remove o primeiro |
-        response = response[1:]
+    response = response.split('\n')
+    # remove linhas vazias
+    response = [line for line in response if line.strip() != '']
 
-    
+    response_header = response[0].strip().split(',')
+    response_body = response[1].strip().split(',')
 
-    response_head = response.split('\n')[0].strip()
-    if response_head[0] == '|':
-        response_head = response_head[1:]
-    if response_head[-1] == '|':
-        response_head = response_head[:-1]
-    response_head = response_head.split('|')
-    
-    response_body =response.split('\n')[2].strip()
-    # verifica se começa com | e remove
-    if response_body[0] == '|':
-        response_body = response_body[1:]
-    # verifica se termina com | e remove
-    if response_body[-1] == '|':
-        response_body = response_body[:-1]
-    response_body = response_body.split('|')
-    for i in range(len(response_body)):
-        response_body[i] = response_body[i].replace(',', ';') # substitui virgulas por ponto e virgula
-
-    print(f"Head: {response_head}")
+    print(f"\n\n\nHeader: {response_header}")
     print(f"Body: {response_body}")
 
 
-    # Verifica se o cabeçalho e o corpo da resposta tem o mesmo tamanho
-    if len(response_head) != len(response_body):
-        print("Erro: Cabeçalho e corpo da resposta tem tamanhos diferentes")
+    if len(response_header) != len(columns):
+        print(f"Erro ao processar a resposta: Número de colunas não corresponde ao esperado. Foram encontradas {len(response_header)} colunas, esperado {len(columns)}")
         return None
-    if len(response_head) != len(columns):
-        print("Erro: Cabeçalho e corpo da resposta tem tamanhos diferentes do modelo")
+
+    if len(response_body) != len(columns):
+        print(f"Erro ao processar a resposta: Número de colunas não corresponde ao esperado. Foram encontradas {len(response_body)} colunas, esperado {len(columns)}")
         return None
+    
+    # escreve um csv temporário sem a coluna de index
+    with open('temp.csv', 'w', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(response_header)
+        writer.writerow(response_body)
+
+    # lê o csv temporário
+    try:
+        df = pd.read_csv('temp.csv', sep=',', encoding='utf-8', engine='python', index_col=False)
+        print("CSV temporário lido com sucesso")
+        # remove o csv temporário
+        os.remove('temp.csv')
+        return df
+    except Exception as e:
+        print(f"Erro ao ler o csv temporário: {e}")
     
 
-    with open('temp.csv', 'w', encoding='utf-8') as f:
-        # escreve o cabeçalho cm as colunas
-        f.write(','.join(columns) + '\n')
-        # escreve o corpo com os valores
-        f.write(','.join(response_body) + '\n')
-    
-    # Ler o CSV e retorna o dataframe
-    df = pd.read_csv('temp.csv', sep=',', encoding='utf-8', index_col=False)
-    
-    return df
+
+    return None
 
 def main():
     pdfs = [pdf for pdf in os.listdir('./PDFs') if pdf.endswith('.pdf')]    
