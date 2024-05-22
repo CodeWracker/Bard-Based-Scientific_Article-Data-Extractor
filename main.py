@@ -15,18 +15,18 @@ cookies = json.loads(open(
 
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-TABLE_MODEL_CSV = "Title,First Author,Year,Source,Battery Type,Control Method,Control Location,SoC Estimation Technique,Control Parameters,Energy Efficiency,Differences (Li vs. Pb-Acid),Battery Capacity,System Power,Energy Source,Implementation Challenges,PWM Circuit Notes,DC-DC Converter Used,Additional Notes"
+TABLE_MODEL_CSV = "Title;First Author;Year;Source;Battery Type;Control Method;Control Location;SoC Estimation Technique;Control Parameters;Energy Efficiency;Differences (Li vs. Pb-Acid);Battery Capacity;System Power;Energy Source;Implementation Challenges;PWM Circuit Notes;DC-DC Converter Used;Additional Notes"
 columns = []
-for col in TABLE_MODEL_CSV.split(','):
+for col in TABLE_MODEL_CSV.split(';'):
     columns.append(col.strip())
 print(columns)
 
 cols_example = ""
 for col in columns:
     if col != columns[-1]:
-        cols_example += f'"Exemplo de preenchimento normal, "'
+        cols_example += f'Exemplo de preenchimento normal; '
     else:
-        cols_example += '"Exemplo de preenchimento com ponto e virgula; blablabla,"'
+        cols_example += 'Exemplo de preenchimento com ponto e virgula, blablabla;'
 
 # if last char is , remove it
 if cols_example[-1] == ',':
@@ -36,7 +36,7 @@ TABLE_MODEL_DESCRIPTION = """
 **Descrição das Colunas:**
 
 - **Title**: Título do artigo.
-- **First Author**: Nome e sobrenome do autor sem usar virgula.
+- **First Author**: SOMENTE O NOME DO PRIMEIRO AUTOR DO ARTIGO!! 1 NOME SÓ APENAS.
 - **Year**: Ano de publicação.
 - **Source**: Fonte ou revista onde o artigo foi publicado.
 - **Battery Type**: Tipo de bateria estudada no artigo.
@@ -71,7 +71,7 @@ def query_article_info(pdf_text):
     while True:
 
         query_text = f"""
-Extraia e organize as informações do artigo científico seguindo o formato de um CSV na saída de texto.* Utilize vírgula (,) como delimitador entre células. Em casos onde o conteúdo interno de uma célula naturalmente incluiria vírgulas, substitua-as por ponto e vírgula (;) para evitar problemas de formatação. Insira os dados conforme as colunas especificadas abaixo, assegurando que a resposta seja limitada à representação textual do CSV, sem adicionar texto explicativo ou fora do formato da tabela.
+Extraia e organize as informações do artigo científico seguindo o formato de um CSV na saída de texto.* Utilize ponto-e-vírgula (;) como delimitador entre células. Insira os dados conforme as colunas especificadas abaixo, assegurando que a resposta seja limitada à representação textual do CSV, sem adicionar texto explicativo ou fora do formato da tabela.
 
 Colunas requeridas:
 
@@ -81,11 +81,11 @@ Colunas requeridas:
 *Instruções detalhadas:*
 
 1. Identifique as informações necessárias para preencher cada coluna listada.
-2. Use ponto e vírgula (;) para substituir quaisquer vírgulas no conteúdo das células, mantendo a clareza do formato CSV.
-3. Preencha as células de forma concisa, focando exclusivamente nas informações solicitadas.
-4. Utilize a última coluna para quaisquer notas adicionais relevantes à extração de dados.
-5. O preenchimento de dados deve ser feito em Português do Brasil, independentemente da lingua do artgo cientifico
-6. A saída de texto deve ser estritamente o conteúdo formatado em CSV, como ilustrado no exemplo abaixo, sem adicionar texto explicativo ou contextual fora dessa formatação.
+2. Preencha as células de forma concisa, focando exclusivamente nas informações solicitadas.
+3. Utilize a última coluna para quaisquer notas adicionais relevantes à extração de dados.
+4. O preenchimento de dados deve ser feito em Português do Brasil, independentemente da lingua do artgo cientifico
+5. A saída de texto deve ser estritamente o conteúdo formatado em CSV, como ilustrado no exemplo abaixo, sem adicionar texto explicativo ou contextual fora dessa formatação.
+6. A separação entre células deve ser feita por ponto e vírgula (;) para evitar conflitos com vírgulas internas em células.
 
 *Exemplo de preenchimento correto generico sem muita relação com o caso especifico que estou enviando agora:*
 
@@ -110,6 +110,7 @@ LEMBRE-SE A SUA RESPOSTA DEVE SER SOMENTE UM CSV!!!!!!! NO FORMATO
 {TABLE_MODEL_CSV}
 {cols_example}
 ```
+NÃO ESQUECE QUE A SUA RESPOSTA DEVE SER UM CSV SEPARADO POR PONTO E VÍRGULA (;).
         """
 
         print(f"Tentando a query com o texto com {len(pdf_text)} caracteres...")
@@ -164,8 +165,9 @@ def process_query_response(response):
     # remove linhas vazias
     response = [line for line in response if line.strip() != '']
 
-    response_header = response[0].strip().split(',')
-    response_body = response[1].strip().split(',')
+    response_header = response[0].strip().replace('"', '').split(';')
+    response_body = response[1].strip().replace('"', '').split(';')
+
 
     print(f"\n\n\nHeader: {response_header}")
     print(f"Body: {response_body}")
@@ -181,15 +183,15 @@ def process_query_response(response):
     
     # escreve um csv temporário sem a coluna de index
     with open('temp.csv', 'w', encoding='utf-8') as f:
-        f.write(','.join(response_header) + '\n')
-        f.write(','.join(response_body) + '\n')
+        f.write(';'.join(response_header) + '\n')
+        f.write(';'.join(response_body) + '\n')
 
     # lê o csv temporário
     try:
-        df = pd.read_csv('temp.csv', sep=',', encoding='utf-8', engine='python', index_col=False)
+        df = pd.read_csv('temp.csv', sep=';', encoding='utf-8', engine='python', index_col=False)
         print("CSV temporário lido com sucesso")
         # remove o csv temporário
-        os.remove('temp.csv')
+        # os.remove('temp.csv')
         return df
     except Exception as e:
         print(f"Erro ao ler o csv temporário: {e}")
@@ -224,14 +226,16 @@ def main():
                 time.sleep(5)
                 continue        
             try:
-                df_final = pd.concat([df_final, df.iloc[1:2]], ignore_index=True)
+                # concatena
+                df_final = pd.concat([df_final, df], ignore_index=True)
                 print(f"Adicionado o artigo {pdf} ao dataframe final")
+                
+                df_final.to_csv('df_final.csv', sep=';', index=False)
                 break
             except Exception as e:
                 print(f"Erro ao adicionar o artigo {pdf} ao dataframe final: {e}")
                 time.sleep(5)
 
-        df_final.to_csv('df_final.csv', sep=',', index=False)
 
 
 
