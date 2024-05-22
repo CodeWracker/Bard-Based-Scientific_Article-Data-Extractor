@@ -12,6 +12,7 @@ sydney-py = "*"
 bardapi = "*"
 re-edge-gpt = "*"
 python-gemini-api = "*"
+openpyxl = "*"
 
 [dev-packages]
 

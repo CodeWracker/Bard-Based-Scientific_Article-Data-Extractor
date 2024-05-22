@@ -1,17 +1,5 @@
-## Resultado da Análise em CSV
+## Extracted information from the article in a  CSV format
 
 ```csv
-Title;First Author;Year;Source;Battery Type;Control Method;Control Location;SoC Estimation Technique;Control Parameters;Energy Efficiency;Differences (Li vs. Pb-Acid);Battery Capacity;System Power;Energy Source;Implementation Challenges;PWM Circuit Notes;DC-DC Converter Used;Additional Notes
-**Aplicacao de Drones com Tecnologia de Analise de Imagem para Identificacao de Infracoes de Transito**;Rodrigo Ferraz Souza;2024;Revista;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;N/A;Diversos datasets utilizados, como VAID, UA VD, DOTA e LSM. Foco em modelos YOLO (3, 4 e 5) para deteccao de veiculos. Necessidade de pesquisas futuras explorando outros modelos e comparando-os.**
-```
-
-**Observações:**
-
-* A coluna "Battery Type", "Control Method", "Control Location", "SoC Estimation Technique", "Control Parameters", "Energy Efficiency", "Differences (Li vs. Pb-Acid)", "Battery Capacity", "System Power", "Energy Source", "Implementation Challenges", "PWM Circuit Notes" e "DC-DC Converter Used" não se aplicam ao artigo em questão, pois o foco é na análise de imagens e não em baterias ou sistemas de controle.
-* A coluna "Additional Notes" foi utilizada para destacar a ênfase em modelos YOLO e a necessidade de pesquisas futuras com outros modelos e comparações.
-* O título do artigo original foi preservado na primeira linha do CSV.
-* O nome do primeiro autor foi extraído do artigo e colocado na segunda linha do CSV.
-* O ano de publicação do artigo foi colocado na terceira linha do CSV.
-* A fonte do artigo ("Revista") foi colocada na quarta linha do CSV.
-
-Espero que este CSV seja útil!
+Titulo;Primeiro Autor;Ano de Publicação;Fonte;Tipo de Bateria usada;Eficiência;Datasets;Notas Adicionais
+Augmented system model-based online collaborative determination of lead–acid battery states for energy management of vehicles;Yuefei Wang;2021;Measurement and Control;Lead-acid battery;High Accuracy;NA;The proposed method achieves high accuracy through a collaborative estimation of SOC and SOH for lead-acid batteries.  This method offers better accuracy than existing methods.░

@@ -13,13 +13,18 @@ import json
 cookies = json.loads(open(
             str(Path(str(Path.cwd()) + "/bard_cookies.json")), encoding="utf-8").read())
 
+# read colunas_e_descricao.xslx e pega as colunas e descrição (é um arquivo excel que tem as colunas normais e no conteudo delas tem a descrição na primeira linha)
+df_example = pd.read_excel('colunas_e_descricao.xlsx')
+
+# pega as colunas
+columns = df_example.columns.tolist()
+descriptions = df_example.iloc[0].tolist()
+print(columns)
+print(descriptions)
+
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-TABLE_MODEL_CSV = "Title;First Author;Year;Source;Battery Type;Control Method;Control Location;SoC Estimation Technique;Control Parameters;Energy Efficiency;Differences (Li vs. Pb-Acid);Battery Capacity;System Power;Energy Source;Implementation Challenges;PWM Circuit Notes;DC-DC Converter Used;Additional Notes"
-columns = []
-for col in TABLE_MODEL_CSV.split(';'):
-    columns.append(col.strip())
-print(columns)
+TABLE_MODEL_CSV = ';'.join(columns)
 
 cols_example = ""
 for col in columns:
@@ -32,28 +37,9 @@ for col in columns:
 if cols_example[-1] == ',':
     cols_example = cols_example[:-1]
 
-TABLE_MODEL_DESCRIPTION = """
-**Descrição das Colunas:**
-
-- **Title**: Título do artigo.
-- **First Author**: SOMENTE O NOME DO PRIMEIRO AUTOR DO ARTIGO!! 1 NOME SÓ APENAS.
-- **Year**: Ano de publicação.
-- **Source**: Fonte ou revista onde o artigo foi publicado.
-- **Battery Type**: Tipo de bateria estudada no artigo.
-- **Control Method**: Método utilizado para controlar a tensão e corrente.
-- **Control Location**: Local onde o controle foi implementado (por exemplo, ESP, Arduino).
-- **SoC Estimation Technique**: Técnica usada para estimar o estado de carregamento da bateria.
-- **Control Parameters**: Dados coletados para realizar o controle, como tensão e corrente de diferentes componentes.
-- **Energy Efficiency**: Eficiência energética do método proposto.
-- **Differences (Li vs. Pb-Acid)**: Diferenças notadas entre baterias de lítio e chumbo-ácido.
-- **Battery Capacity**: Capacidade da bateria usada no estudo.
-- **System Power**: Potência total do sistema estudado.
-- **Energy Source**: Fonte de energia utilizada (por exemplo, fotovoltaica).
-- **Implementation Challenges**: Desafios encontrados durante a implementação do método.
-- **PWM Circuit Notes**: Anotações específicas sobre o circuito PWM utilizado.
-- **DC-DC Converter Used**: Indicação se um conversor DC-DC foi usado no estudo.
-- **Additional Notes**: Qualquer outra observação ou informação relevante sobre o artigo.
-"""
+TABLE_MODEL_DESCRIPTION = ""
+for col, desc in zip(columns, descriptions):
+    TABLE_MODEL_DESCRIPTION += f'{col}: {desc}\n'
 
 def cut_text(text, cut_length=1000):
     if len(text) > cut_length:
@@ -124,8 +110,12 @@ NÃO ESQUECE QUE A SUA RESPOSTA DEVE SER UM CSV SEPARADO POR PONTO E VÍRGULA (;
             
         except Exception as e:
             print(f"Erro ao criar a query: {e}")
-            print("Diminuindo o texto em 10.000 caracteres")
-            pdf_text = cut_text(pdf_text, 10000)
+            if("SNlM0e" not in str(e)):
+                print("Diminuindo o texto em 10.000 caracteres")
+                pdf_text = cut_text(pdf_text, 10000)
+            else:
+                print("Altere os Tokens de autenticação no arquivo bard_cookies.json")
+                time.sleep(60)
             time.sleep(5)
             continue
 
