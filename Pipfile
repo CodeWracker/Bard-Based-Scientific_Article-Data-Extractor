@@ -10,6 +10,8 @@ log2d = "*"
 pandas = "*"
 sydney-py = "*"
 bardapi = "*"
+re-edge-gpt = "*"
+python-gemini-api = "*"
 
 [dev-packages]
 
