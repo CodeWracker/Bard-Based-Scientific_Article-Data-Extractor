@@ -1,49 +1,49 @@
-# Bard-Based-Scientific_Article-Data-Extractor
+# Bard-Based Scientific Article Data Extractor
 
-## Visão Geral
+## Overview
 
-Este programa é projetado para extrair e organizar informações de artigos científicos armazenados em formato PDF em um arquivo CSV estruturado. Ele usa cabeçalhos de colunas e descrições pré-definidas em um arquivo Excel (`colunas_e_descricao.xlsx`). O programa utiliza o modelo Gemini da OpenAI para geração e extração de conteúdo.
+This program is designed to extract and organize information from scientific articles stored in PDF format into a structured CSV file. It uses column headers and descriptions predefined in an Excel file (`colunas_e_descricao.xlsx`). The program leverages OpenAI's Gemini model for content generation and extraction.
 
-## Pré-requisitos
+## Prerequisites
 
-1. **Python 3.9**: Certifique-se de que o Python 3.9 está instalado em seu sistema.
-2. **Dependências**: Use `pipenv` para gerenciar os pacotes Python. Instale-o através do comando `pip install pipenv`.
-3. **Cookies para Gemini**: Obtenha cookies visitando [Google Gemini](https://gemini.google.com/). Use a extensão do Chrome [ExportThisCookie](https://chromewebstore.google.com/detail/exportthiscookie/dannllckdimllhkiplchkcaoheibealk) para exportar os cookies para `bard_cookies.json`.
+1. **Python 3.9**: Ensure that Python 3.9 is installed on your system.
+2. **Dependencies**: Use `pipenv` to manage Python packages. Install it with the command `pip install pipenv`.
+3. **Cookies for Gemini**: Obtain cookies by visiting [Google Gemini](https://gemini.google.com/). Use the Chrome extension [ExportThisCookie](https://chromewebstore.google.com/detail/exportthiscookie/dannllckdimllhkiplchkcaoheibealk) to export the cookies to `bard_cookies.json`.
 
-## Instalação
+## Installation
 
-1. Clone o repositório ou baixe o código-fonte.
-2. Dentro do diretório do projeto, execute: `pipenv install`
+1. Clone the repository or download the source code.
+2. Inside the project directory, run: `pipenv install`
 
-Isso instalará todos os pacotes Python necessários em um ambiente virtual.
+This will install all necessary Python packages in a virtual environment.
 
-## Configuração
+## Configuration
 
-1. **Prepare os Cookies**: Coloque os cookies exportados em `bard_cookies.json` no diretório do projeto.
-2. **Configure Colunas e Descrições**: Modifique `colunas_e_descrição.xlsx` para definir as colunas que deseja extrair dos artigos. A primeira linha de cada coluna deve descrever o que a informação representa. Aqui está um exemplo de configuração (voce pode colocar qualquer coluna e qualquer descrição, mas tente ser claro pois os modelos de LLM são meio burros, vide o fato de que eu tive que gritar em capslock para ele entender o que eu queria em um dos campos):
+1. **Prepare Cookies**: Place the exported cookies in `bard_cookies.json` in the project directory.
+2. **Configure Columns and Descriptions**: Modify `colunas_e_descricao.xlsx` to define the columns you want to extract from the articles. The first row of each column should describe what the information represents. Here is an example configuration (you can put any column and any description, but try to be clear because LLM models can be somewhat literal, as evidenced by the fact that I had to shout in capslock for it to understand what I wanted in one of the fields):
 
-| Título| Primeiro Autor| Ano de Publicação | Fonte| Tipo de Bateria| Eficiência| Datasets| Notas Adicionais|
-| ---------------- | ------------- | ----------------- | ------------------- | --------- | --------------- | ---------------- | --------------- |
-| Título do Artigo | SOMENTE O NOME DO PRIMEIRO AUTOR DO ARTIGO!!!!! NOME SÓ APENAS | Ano de Publicação | Fonte ou revista onde o artigo foi publicado | Tipo de bateria estudada no artigo | Eficiência energética do método proposto | Lista dos datasets separados por vírgula citados durante o artigo | Qualquer outra observação ou informação relevante sobre o artigo |
+| Title            | First Author            | Year of Publication | Source                | Battery Type         | Efficiency | Datasets                  | Additional Notes       |
+|------------------|-------------------------|---------------------|-----------------------|----------------------|------------|---------------------------|------------------------|
+| Article Title    | ONLY THE NAME OF THE FIRST AUTHOR OF THE ARTICLE!!!!! NAME ONLY | Year of Publication | Source or journal where the article was published | Type of battery studied in the article | Energy efficiency of the proposed method | List of datasets separated by commas cited during the article | Any other relevant information or observation about the article |
 
-3. **Prepare os PDFs**: Coloque os PDFs a serem analisados na pasta `PDFs`.
+3. **Prepare PDFs**: Place the PDFs to be analyzed in the `PDFs` folder.
 
-## Uso
+## Usage
 
-Para executar o programa, use o seguinte comando dentro do diretório do projeto:
+To run the program, use the following command within the project directory:
 
 ```
 python main.py
 ```
 
-O programa processa cada arquivo PDF no diretório `PDFs`, extrai as informações relevantes usando o modelo Gemini e produz os resultados em formato CSV com as colunas especificadas.
+The program processes each PDF file in the `PDFs` directory, extracts the relevant information using the Gemini model, and outputs the results in a CSV format with the specified columns.
 
-## Notas Importantes
+## Important Notes
 
-- O programa processa apenas texto; se a análise gráfica for crucial e o artigo não discutir o gráfico no texto, essa solução pode não ser ideal.
-- Certifique-se de que seu arquivo de cookies e a configuração das colunas estejam corretamente configurados para evitar problemas de autenticação ou de análise.
-- A resposta do Gemini deve seguir estritamente o formato CSV com ponto e vírgula (`;`) como delimitador.
+- The program processes text only; if graphical analysis is crucial and the article does not discuss the graph in the text, this solution may not be ideal.
+- Ensure that your cookie file and column configuration are correctly set up to avoid authentication or analysis issues.
+- The Gemini response should strictly follow the CSV format with a semicolon (`;`) as the delimiter.
 
-## Saída
+## Output
 
-Os dados finais extraídos de todos os PDFs serão salvos em `df_final.csv` no diretório do projeto. O CSV seguirá a estrutura de colunas especificada em `colunas_e_descrição.xlsx`.
+The extracted data from all PDFs will be saved in `df_final.csv` in the project directory. The CSV will follow the column structure specified in `colunas_e_descricao.xlsx`.
