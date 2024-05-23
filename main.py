@@ -196,7 +196,14 @@ def main():
     if not os.path.exists('./CSVs'):
         os.makedirs('./CSVs')
 
-    df_final = pd.DataFrame(columns=columns)
+    try:
+        df_final = pd.read_csv('df_final.csv', sep=';', encoding='utf-8', engine='python', index_col=False)
+        print("Dataframe final lido com sucesso")
+    except Exception as e:
+        print(f"Erro ao ler o dataframe final: {e}")
+        df_final = pd.DataFrame(columns=columns)
+        df_final.to_csv('df_final.csv', sep=';', index=False)
+        print("Dataframe final criado com sucesso")
 
 
     for pdf in pdfs:
