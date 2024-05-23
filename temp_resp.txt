@@ -2,4 +2,4 @@
 
 ```csv
 Titulo;Primeiro Autor;Ano de Publicação;Fonte;Tipo de Bateria usada;Eficiência;Datasets;Notas Adicionais
-Augmented system model-based online collaborative determination of lead–acid battery states for energy management of vehicles;Yuefei Wang;2021;Measurement and Control;Lead-acid battery;High Accuracy;NA;The proposed method achieves high accuracy through a collaborative estimation of SOC and SOH for lead-acid batteries.  This method offers better accuracy than existing methods.░
+Augmented system model-based online collaborative determination of lead–acid battery states for energy management of vehicles;Yuefei Wang;2021;Measurement and Control;Lead-acid battery;NA;NA;The proposed method achieves high accuracy through a collaborative estimation algorithm for SOC and SOH  based on LSCPI and AKFAS algorithms. The estimation accuracy of SOC reaches 3.13%, which is 7% higher than existing methods.░

@@ -10,8 +10,7 @@ from pathlib import Path
 import json
 
 
-cookies = json.loads(open(
-            str(Path(str(Path.cwd()) + "/bard_cookies.json")), encoding="utf-8").read())
+
 
 # read colunas_e_descricao.xslx e pega as colunas e descrição (é um arquivo excel que tem as colunas normais e no conteudo delas tem a descrição na primeira linha)
 df_example = pd.read_excel('colunas_e_descricao.xlsx')
@@ -104,6 +103,8 @@ NÃO ESQUECE QUE A SUA RESPOSTA DEVE SER UM CSV SEPARADO POR PONTO E VÍRGULA (;
 
 
         try:
+            cookies = json.loads(open(
+            str(Path(str(Path.cwd()) + "/bard_cookies.json")), encoding="utf-8").read())
             client = Gemini(cookies=cookies) # You can use various args
             response = client.generate_content(query_text)
             # response_json = json.loads(response.payload)
@@ -121,9 +122,7 @@ NÃO ESQUECE QUE A SUA RESPOSTA DEVE SER UM CSV SEPARADO POR PONTO E VÍRGULA (;
 
 
         try:
-            response = response.candidates[0].text
-            
-            print(response)
+            response = response.candidates[0].text            
         except Exception as e:
             print(f"Erro ao converter a query: {e}")
             print("Diminuindo o texto em 10.000 caracteres")
@@ -181,7 +180,7 @@ def process_query_response(response):
         df = pd.read_csv('temp.csv', sep=';', encoding='utf-8', engine='python', index_col=False)
         print("CSV temporário lido com sucesso")
         # remove o csv temporário
-        # os.remove('temp.csv')
+        os.remove('temp.csv')
         return df
     except Exception as e:
         print(f"Erro ao ler o csv temporário: {e}")
@@ -192,6 +191,11 @@ def process_query_response(response):
 
 def main():
     pdfs = [pdf for pdf in os.listdir('./PDFs') if pdf.endswith('.pdf')]    
+
+    # verifica se a pasta CSVs existe
+    if not os.path.exists('./CSVs'):
+        os.makedirs('./CSVs')
+
     df_final = pd.DataFrame(columns=columns)
 
 
@@ -201,6 +205,13 @@ def main():
         if not pdf.endswith('.pdf'):
             print(f"O arquivo {pdf} não é um pdf")
             continue
+
+        # verifica se o arquivo ja foi processado
+        pdf_name = pdf.split('.')[0]
+        if os.path.exists(f'./CSVs/{pdf_name}.csv'):
+            print(f"O arquivo {pdf} já foi processado")
+            continue
+    
         pdf_text = extract_text_from_pdf(os.path.join('./PDFs', pdf))
         while True:
             response = query_article_info(pdf_text)
@@ -219,7 +230,8 @@ def main():
                 # concatena
                 df_final = pd.concat([df_final, df], ignore_index=True)
                 print(f"Adicionado o artigo {pdf} ao dataframe final")
-                
+                # cria um csv do arquivo para gerar um backup
+                df.to_csv(f'./CSVs/{pdf_name}.csv', sep=';', index=False)
                 df_final.to_csv('df_final.csv', sep=';', index=False)
                 break
             except Exception as e:
