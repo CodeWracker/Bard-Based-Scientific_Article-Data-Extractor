@@ -21,7 +21,12 @@ descriptions = df_example.iloc[0].tolist()
 print(columns)
 print(descriptions)
 
-asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+try:
+    # pra windows
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+except:
+    pass
+
 
 TABLE_MODEL_CSV = ';'.join(columns)
 
