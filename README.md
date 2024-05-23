@@ -25,7 +25,9 @@ This will install all necessary Python packages in a virtual environment.
 
 ## Usage
 
-The program processes each PDF file in the `PDFs` directory, extracts the relevant information using the Gemini model, and outputs the results in a CSV format with the specified columns.
+The program processes each PDF file in the `PDFs` directory, extracting relevant information using the Gemini model and outputting the results in CSV format with the specified columns.
+
+While running, you may encounter an error indicating the need to refresh the cookies. If this occurs, revisit the Gemini page, refresh it by clearing the cache, then download the cookies again and update the `bard_cookies.json` file. If this does not resolve the issue, try logging in through an incognito tab, then switch back to a regular tab, refresh it, and follow the previous steps. The program is designed to handle this situation dynamically; it will pause whenever a cookie-related error occurs, giving you time to update the cookies before it attempts to proceed.
 
 ### With docker
 
