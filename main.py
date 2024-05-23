@@ -8,7 +8,7 @@ from gemini import Gemini
 import csv
 from pathlib import Path
 import json
-
+import random
 
 
 
@@ -127,7 +127,10 @@ NÃO ESQUECE QUE A SUA RESPOSTA DEVE SER UM CSV SEPARADO POR PONTO E VÍRGULA (;
 
 
         try:
-            response = response.candidates[0].text            
+            chosen_index = None
+            # escolhe aleatoriamente entre 0 e o tamanho da lista de candidatos
+            chosen_index = random.randint(0, len(response.candidates) - 1)
+            response = response.candidates[chosen_index].text            
         except Exception as e:
             print(f"Erro ao converter a query: {e}")
             print("Diminuindo o texto em 10.000 caracteres")
