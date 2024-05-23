@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  bard_pdf_service:
+    image: bard_pdf_service:latest
+    container_name: bard_pdf_service_container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    command: "python main.py"
+    tty: true
+    stdin_open: true
